@@ -1,0 +1,45 @@
+from selenium import webdriver
+import datetime
+import time
+import threading
+from selenium.webdriver.common.keys import Keys
+#driver = webdriver.Chrome("D:\\Python\\PyCharm 2018.3.4\\lib\\ChromeDriver")
+#driver2 = webdriver.Chrome("D:\\Python\\PyCharm 2018.3.4\\lib\\ChromeDriver")
+
+def login():
+    driver = webdriver.Chrome("D:\\Python\\PyCharm 2018.3.4\\lib\\ChromeDriver")
+    driver.get("https://www.taobao.com")
+    time.sleep(3)
+    if driver.find_element_by_link_text("亲，请登录"):
+        driver.find_element_by_link_text("亲，请登录").click()
+        time.sleep(15)
+        driver.get("https://detail.tmall.com/item.htm?spm=a1z10.1-b-s.w5003-21440364036.3.13a37df6P1eNMv&id=556432420535&scene=taobao_shop")
+        driver.find_element_by_xpath("/html[1]/body[1]/div[5]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[4]/div[1]/div[1]/dl[1]/dd[1]/ul[1]/li[7]/a[1]").click()
+        driver.find_element_by_xpath(
+            "/html[1]/body[1]/div[5]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[4]/div[1]/div[1]/dl[2]/dd[1]/ul[1]/li[1]/a[1]/span[1]").click()
+        while True:
+            try:
+                if driver.find_element_by_id("J_LinkBuy"):
+                    driver.find_element_by_id("J_LinkBuy").click()
+                    break
+            except:
+                driver.refresh();
+                print("找不到按钮")
+        while True:
+            try:
+                if driver.find_element_by_link_text('提交订单'):
+                    driver.find_element_by_link_text('提交订单').click()
+                    now1 = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
+                    print("抢购成功时间：%s" % now1)
+            except:
+                print("提交订单成功")
+                break
+        time.sleep(0.01)
+
+
+if __name__ == "__main__":
+    for i in range(5):
+        thread = threading.Thread(target=login())
+        thread.daemon = True
+        thread.start()
+        time.sleep(1)
